@@ -435,7 +435,7 @@ int CheckAroundNbFlag(Grid* Grid, int ChoiceX, int ChoiceY) {
 }
 
 // Put a flag around a tile
-int PutFlagAround(Grid* Grid, int ChoiceX, int ChoiceY,int* pFlag) {
+int PutFlagAround(Grid* Grid, int ChoiceX, int ChoiceY, int* pFlag) {
     int haveFlag = 0;
     for (int dx = -1; dx <= 1; dx++)
     {
@@ -492,7 +492,7 @@ void RevealHypothesisTile(Grid* Grid, int x, int y) {
             // Out of range ?
             if (newX >= 0 && newX < Grid->Width && newY >= 0 && newY < Grid->Height) {
                 // If no Flag and nbHypothesis+1 = nbTilesRemain
-                if (!(Grid->Suggestion[newY * Grid->Width + newX].nbHypothesis + 1 == Grid->Suggestion[newY * Grid->Width + newX].nbTilesRemain) && Grid->Tile[newY * Grid->Width + newX].Flag==0) {
+                if (!(Grid->Suggestion[newY * Grid->Width + newX].nbHypothesis + 1 == Grid->Suggestion[newY * Grid->Width + newX].nbTilesRemain) && Grid->Tile[newY * Grid->Width + newX].Flag == 0&&Grid->Tile[newY * Grid->Width + newX].hidden == 1) {
                     // if the content == 0 -> make reveal a multitude of tile
                     if (Grid->Tile[newY * Grid->Width + newX].content == 0) {
                         RevealTile(Grid, newX, newY);
@@ -520,7 +520,7 @@ void AddHypothesis(Grid* Grid, int x, int y) {
                 // Out of range ?
                 if (newX >= 0 && newX < Grid->Width && newY >= 0 && newY < Grid->Height) {
                     // Hidden , content >= nbHypothesis
-                    if (Grid->Tile[newY * Grid->Width + newX].hidden == 1) {// && Grid->Tile[y * Grid->Width + x].content >= Grid->Suggestion[newY * Grid->Width + newX].nbHypothesis
+                    if (Grid->Tile[newY * Grid->Width + newX].hidden == 1) {
                         //nbHypothesis < (content or =0) && nbTilesRemain > (nbHidden or =0)
                         if ((Grid->Suggestion[newY * Grid->Width + newX].nbHypothesis < Grid->Tile[y * Grid->Width + x].content) || (Grid->Suggestion[newY * Grid->Width + newX].nbHypothesis == 0) && (Grid->Suggestion[newY * Grid->Width + newX].nbTilesRemain > nbHidden || Grid->Suggestion[newY * Grid->Width + newX].nbTilesRemain == 0)) {
                             Grid->Suggestion[newY * Grid->Width + newX].nbHypothesis = Grid->Tile[y * Grid->Width + x].content - CheckAroundNbFlag(Grid, x, y);
@@ -570,7 +570,7 @@ void GameAI(Grid* Grid, int NbBomb, int NbFlag, int ChoiceX, int ChoiceY, int Fl
         int haveFlag = 0;
         DisplayOpenedGrid(Grid->Height, Grid->Width, Grid);
         printf("Mine remaning : %d \n", NbBomb - NbFlag);
-        DisplayPlayerGrid(Grid->Height, Grid->Width, Grid); 
+        DisplayPlayerGrid(Grid->Height, Grid->Width, Grid);
         DisplayHypoGrid(Grid->Height, Grid->Width, Grid);
 
         // Put easy flag
@@ -582,7 +582,7 @@ void GameAI(Grid* Grid, int NbBomb, int NbFlag, int ChoiceX, int ChoiceY, int Fl
                     if (Grid->Tile[y * Grid->Width + x].content > 0) {
                         // content == nb Hidden around
                         if (CheckAroundNbHidden(Grid, x, y) == Grid->Tile[y * Grid->Width + x].content && Grid->Tile[y * Grid->Width + x].Flag == 0) {
-                            haveFlag = PutFlagAround(Grid, x, y,&NbFlag );
+                            haveFlag = PutFlagAround(Grid, x, y, &NbFlag);
                         }
                     }
                 }
@@ -598,7 +598,7 @@ void GameAI(Grid* Grid, int NbBomb, int NbFlag, int ChoiceX, int ChoiceY, int Fl
         }
         ResetHypo(Grid);
         // if not easy tile or flag
-        if (!haveReveal&&!haveFlag) {
+        if (!haveReveal && !haveFlag) {
             for (int y = 0; y < Grid->Width; y++) {
                 for (int x = 0; x < Grid->Height; x++) {
                     // No hidden and content != nb Hidden around
@@ -616,7 +616,6 @@ void GameAI(Grid* Grid, int NbBomb, int NbFlag, int ChoiceX, int ChoiceY, int Fl
                 }
             }
         }
-            
         // If Win : YOU WIN
         if (ItsWin(Grid, NbBomb))
         {
@@ -643,17 +642,17 @@ int Game(Grid* Grid, int NbBomb, int NbFlag, int ChoiceX, int ChoiceY, int Flag)
             ChoiceX = AskIntInRange("Choose X : ", ChoiceX, 1, Grid->Width) - 1;
             ChoiceY = AskIntInRange("Choose Y : ", ChoiceY, 1, Grid->Height) - 1;
         } while (AskChoices(Flag, ChoiceX, ChoiceY, Grid) == 0);
-        printf("problème");
+        printf("problÃ¨me");
         // Check possibility
         CheckPossibility(Grid, Flag, ChoiceX, ChoiceY, &NbFlag);
-        printf("problème");
+        printf("problÃ¨me");
         // If Lose : YOU LOSE
         if (Flag == 0) {
             if (ItsLose(Grid, ChoiceX, ChoiceY)) {
                 break;
             }
         }
-        printf("problème");
+        printf("problÃ¨me");
         // If Win : YOU WIN
         if (ItsWin(Grid, NbBomb))
         {
@@ -667,7 +666,7 @@ int main()
 {
     while (1)
     {
-        //system("cls");
+        system("cls");
         char Yes[1] = { 'Y' };
         int ChoiceX = 0, ChoiceY = 0, Flag = 0, NbFlag = 0, SizeHeight = 0, SizeWidth = 0;
 
@@ -751,17 +750,17 @@ int main()
 }
 
 
-// Idée en tete / Chose a finir
+// IdÃ©e en tete / Chose a finir
 //  LISIBILITE
 //  Bot qui jous au jeux
-//  possibilité de changer la difficulté ? 
+//  possibilitÃ© de changer la difficultÃ© ? 
 //  Optimiser
 //  mettre des couleurs
 
 
 
-//Hypothèse dans grid
-//Mettre pour chaque case des hypothèses avec le nb restant de bombe autour
+//HypothÃ¨se dans grid
+//Mettre pour chaque case des hypothÃ¨ses avec le nb restant de bombe autour
 //Mettre pour chaque case le nombre de case restante
-//remplacer les hypothèse faible par les plus forte
-//Si une tile possède 2 (hypothèses + 1 == remaining tile) autour alors reveal les autres 
+//remplacer les hypothÃ¨se faible par les plus forte
+//Si une tile possÃ¨de 2 (hypothÃ¨ses + 1 == remaining tile) autour alors reveal les autres 
